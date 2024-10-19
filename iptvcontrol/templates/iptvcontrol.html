@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPTV Control</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Adicione seu CSS aqui -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            text-transform: uppercase; /* Títulos em maiúsculas */
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            text-transform: uppercase; /* Labels em maiúsculas */
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-transform: uppercase; /* Inputs em maiúsculas */
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase; /* Botão em maiúsculas */
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            text-transform: uppercase; /* Células da tabela em maiúsculas */
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>IPTV Control</h1>
+        <form method="POST" action="{% url 'iptv_control' %}">
+            {% csrf_token %}
+            <label for="cliente">Cliente:</label>
+            <input type="text" id="cliente" name="cliente" required>
+
+            <label for="mac">MAC:</label>
+            <input type="text" id="mac" name="mac" required>
+
+            <label for="key">Key:</label>
+            <input type="text" id="key" name="key">
+
+            <label for="m3u">Aplicativo M3U:</label>
+            <input type="text" id="m3u" name="m3u" required>
+
+            <button type="submit">Enviar</button>
+        </form>
+
+        <h2>Lista de Clientes</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>MAC</th>
+                    <th>Key</th>
+                    <th>M3U</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cliente in clientes %}
+                <tr>
+                    <td>{{ cliente.cliente }}</td>
+                    <td>{{ cliente.mac }}</td>
+                    <td>{{ cliente.key }}</td>
+                    <td>{{ cliente.m3u }}</td>
+                    <td>
+                        <a href="{% url 'editar_cliente' cliente.id %}">Editar</a> |
+                        <a href="{% url 'deletar_cliente' cliente.id %}">Deletar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align:center;">Nenhum cliente cadastrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
